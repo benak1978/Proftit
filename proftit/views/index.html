@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="bookApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Books Favorites Organizer</title>
+  <link rel="stylesheet" type="text/css" href="../css/styles.css">
+</head>
+<body ng-controller="BookController">
+  <!-- Login Screen -->
+  <div ng-show="!loggedIn && !showFavorites">
+    <h1>Login</h1>
+    <button ng-click="fakeLogin()">Login</button>
+  </div>
+
+  <!-- Main App Screen -->
+  <div id="app" ng-show="loggedIn">
+  <a class="lien_click" ng-click="goToFavorites()">View Favorites</a>
+    <h1>Books List</h1>
+    <div>
+      <input type="text" ng-model="searchQuery" placeholder="Search...">
+      <button ng-click="searchBooks()">Search</button>
+    </div>
+
+    <!-- Book List -->
+    <div class="book-item" ng-repeat="book in pagedBooks">
+      <div class="book-box">
+        <h3>{{ book.volumeInfo.title }}</h3>
+        <p>By: {{ book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown' }}</p>
+        <!-- Ajoutez d'autres détails du livre selon les besoins -->
+        <button ng-click="showDetails(book)">Show More</button>
+        <button ng-click="toggleFavorite(book)">Toggle Favorite</button>
+        <span ng-show="isFavorite(book)">Favorite</span>
+
+        <!-- Description Container -->
+        <div ng-show="book.showDescription">
+          <p>{{ book.volumeInfo.description }}</p>
+          <button ng-click="hideDetails(book)">Hide Details</button>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Pagination Controls -->
+    <div>
+      <button ng-click="fetchBooks('previous')" ng-disabled="currentPage === 1">Previous</button>
+      <button ng-click="fetchBooks('next')" ng-disabled="currentPage === totalPage">Next</button>
+    </div>
+  </div>
+
+<!-- Favorite Books Page -->
+<div id="favoritesPage" ng-show="showFavorites">
+  <a class="lien_click" ng-click="returnToIndex()">Return to index</a>
+  <h1>Favorite Books</h1>
+
+  <div class="book-item" ng-repeat="book in favorites">
+    <div class="book-box">
+      <h3>{{ book.volumeInfo.title }}</h3>
+      <p>By: {{ book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown' }}</p>
+
+      <button ng-click="showDetails(book)">Show More</button>
+
+      <div ng-show="book.showDescription">
+        <p>{{ book.volumeInfo.description }}</p>
+        <button ng-click="hideDetails(book)">Hide Details</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>
+
